@@ -1,0 +1,9 @@
+jjwt:
+  password:
+    encoder:
+      secret: jwtSuperSecret
+      iteration: 33
+      keylength: 256
+  jwt:
+    secret: jwtSuperSecret
+    expiration: 28800

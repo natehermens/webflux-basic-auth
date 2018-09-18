@@ -6,8 +6,10 @@ import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.nhermens.auth.security.Account;
+import com.nhermens.auth.security.UserPrincipal;
 
 public class User implements Account {
 
@@ -73,5 +75,8 @@ public class User implements Account {
 	public User setActive(Boolean active) {
 		this.active = active;
 		return this;
+	}
+	public UserDetails toUserDetails() {
+		return new UserPrincipal(this);
 	}
 }
