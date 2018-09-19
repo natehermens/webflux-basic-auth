@@ -41,10 +41,10 @@ public class JWTUtil implements Serializable {
 		return expiration.before(new Date());
 	}
 	
-	public String generateToken(Account user) {
+	public String generateToken(UserDetails user) {
 		Map<String, Object> claims = new HashMap<>();
-		claims.put("role", user.getRoles());
-		claims.put("enable", user.getActive());
+		claims.put("role", user.getAuthorities());
+		claims.put("enable", user.isEnabled());
 		return doGenerateToken(claims, user.getUsername());
 	}
 

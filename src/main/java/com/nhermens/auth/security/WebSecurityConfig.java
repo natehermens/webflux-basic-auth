@@ -39,7 +39,7 @@ public class WebSecurityConfig {
 				.securityContextRepository(securityContextRepository)				
 				.authorizeExchange()
 					.pathMatchers("/home").hasAuthority("USER")
-					.pathMatchers("/login").permitAll()
+					.pathMatchers("/auth","/signup").permitAll()
 					.anyExchange().permitAll()
 				.and()
 					.build();
