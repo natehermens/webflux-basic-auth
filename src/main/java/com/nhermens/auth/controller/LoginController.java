@@ -46,10 +46,10 @@ public class LoginController {
 		return userRepository.findByUsername(ar.getUsername())
 				.map((userDetails) -> {			
 					if (passwordEncoder.encode(ar.getPassword()).equals(userDetails.getPassword())) {
-						log.info("failed auth for user["+ar.getUsername()+"]");
+						log.info("successful auth for user["+ar.getUsername()+"]");
 						return ResponseEntity.ok(new AuthResponse(jwtUtil.generateToken(userDetails)));
 					} else {
-						log.info("successful auth for user["+ar.getUsername()+"]");
+						log.info("failed auth for user["+ar.getUsername()+"]");
 						return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 					}
 				})
@@ -61,6 +61,7 @@ public class LoginController {
 			
 		return userRepository.findByUsername(signupRequest.getUsername())
 				.map((userDetails) -> {
+					log.info("have UserDetails");
 					return ResponseEntity.badRequest().body(new ApiResponse(false, "user "+userDetails.getUsername()+" already exists.")); 
 				})
 				.switchIfEmpty(createUser(signupRequest));
@@ -71,7 +72,10 @@ public class LoginController {
 		user.setUsername(request.getUsername());
 		user.setPassword(passwordEncoder.encode(request.getPassword()));
 		user.setEmail(request.getEmail());
-		Mono<User> savedUser = userDao.saveUser(user);
-		return Mono.just(ResponseEntity.ok(new ApiResponse(true, "user "+request.getUsername()+" created")));
+		
+		return userDao.saveUser(user)
+				.map(u -> 
+					ResponseEntity.ok(new ApiResponse(true, "add user "+request.getUsername()+" with id["+u.getId()+"]"))
+				);
 	}
 }
